@@ -52,3 +52,16 @@ or edit root's crontab.
 ```
 03 04 * * * /bin/bash /path/to/backup-mastodon/backup-mastodon.sh > /tmp/backup-mastodon.out 2>&1
 ```
+
+## note
+if you use tcp/ip to connect to postgresql, put a file .pgpass in directory /root. (such as if postgresql is running on another host)
+
+```
+<host>:<port>:<db name>:<user>:<password>
+```
+
+for example:
+
+```
+127.0.0.1:5432:mastodon_production:mastodon:mastodonpassword
+```
