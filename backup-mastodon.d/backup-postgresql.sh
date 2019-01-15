@@ -56,7 +56,7 @@ fi
 RESTORE_TXT="${BACKUP_DEST_DIR}/restore.txt"
 
 if [[ "${DB_HOST}" =~ ^/ ]]; then
-  echo "# cd /var/tmp"
+  echo "# cd /var/tmp" > ${RESTORE_TXT}
   echo "# sudo -u ${DB_USER} psql -d postgres" > ${RESTORE_TXT}
 else
   echo "# psql -h ${DB_HOST} -d postgres -U ${DB_USER} -W" > ${RESTORE_TXT}
