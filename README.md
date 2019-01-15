@@ -65,3 +65,6 @@ for example:
 ```
 127.0.0.1:5432:mastodon_production:mastodon:mastodonpassword
 ```
+
+## note2
+Also even if using tcp/ip to connect to postgresql, these scripts will work correctly. __MAYBE__.
