@@ -29,6 +29,14 @@ $ cp backup-mastodon.d/.env.backup-redis.sample backup-mastodon.d/.env.backup-re
 - /backup-mastodon.d/.env.backup-postgresql
 - /backup-mastodon.d/.env.backup-redis
 
+edit .env files with your favourite editor.
+
+```
+$ vi .env.backup-mastodon
+$ vi backup-mastodon.d/.env.backup-postgresql
+$ vi backup-mastodon.d/.env.backup-redis
+```
+
 ### test run
 
 run as root.
