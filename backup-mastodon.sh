@@ -30,16 +30,16 @@ echo 'start to backup mastodon.'
 
 # backup mastodon .env.production
 echo 'backing up .env.production...'
-ENV_PROD="$(date +%Y-%m-%d-%H.%M.%S).env.production"
+ENV_PROD="env.production.$(date +%Y-%m-%d-%H.%M.%S)"
 ${CP_CMD} -p ${MASTODON_DIR}/.env.production ${BACKUP_DEST_DIR}/${ENV_PROD}
 if [[ $? -ne 0 ]]; then
-  echo 'failed to backup mastodon .env.production.'
-  ${LOGGER_CMD} -p user.err 'failed to backup mastodon.'
+  echo 'failed to backup .env.production.'
+  ${LOGGER_CMD} -p user.err 'failed to backup .env.production.'
   exit 3
 fi
 
 # delete old .env.production
-${FIND_CMD} ${BACKUP_DEST_DIR} -name "*.env.production" -mtime +${NUM_DAYS} -exec rm {} \;
+${FIND_CMD} ${BACKUP_DEST_DIR} -name "env.production.*" -mtime +${NUM_DAYS} -exec rm {} \;
 if [[ $? -ne 0 ]]; then
   echo 'failed to delete old .env.production'
   ${LOGGER_CMD} -p user.err 'failed to delete old .env.production'
