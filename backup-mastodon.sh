@@ -39,7 +39,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # delete old .env.production
-${FIND_CMD} ${BACKUP_DEST_DIR} -name "${DB_NAME}.dump.*" -mtime +${NUM_DAYS} -exec rm {} \;
+${FIND_CMD} ${BACKUP_DEST_DIR} -name "*.env.production" -mtime +${NUM_DAYS} -exec rm {} \;
 if [[ $? -ne 0 ]]; then
   echo 'failed to delete old .env.production'
   ${LOGGER_CMD} -p user.err 'failed to delete old .env.production'
