@@ -32,6 +32,7 @@ DUMP_FILE="${BACKUP_DEST_DIR}/${DB_NAME}.dump.$(date +%Y-%m-%d-%H.%M.%S)"
 export LANG=${LANG_}
 
 if [[ "${DB_HOST}" =~ ^/ ]]; then
+  cd /var/tmp # to avoid a warning "permission denied"
   ${SUDO_CMD} -u ${DB_USER} ${PG_DUMP} -Fc -d ${DB_NAME} --schema=public > ${DUMP_FILE}
 else
   ${PG_DUMP} -Fc -w -h ${DB_HOST} -d ${DB_NAME} -U ${DB_USER} --schema=public > ${DUMP_FILE}
@@ -55,6 +56,7 @@ fi
 RESTORE_TXT="${BACKUP_DEST_DIR}/restore.txt"
 
 if [[ "${DB_HOST}" =~ ^/ ]]; then
+  echo "# cd /var/tmp"
   echo "# sudo -u ${DB_USER} psql -d postgres" > ${RESTORE_TXT}
 else
   echo "# psql -h ${DB_HOST} -d postgres -U ${DB_USER} -W" > ${RESTORE_TXT}
