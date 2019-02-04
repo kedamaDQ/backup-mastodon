@@ -58,7 +58,7 @@ RESTORE_TXT="${BACKUP_DEST_DIR}/restore.txt"
 
 if [[ "${DB_HOST}" =~ ^/ ]]; then
   echo "# cd /var/tmp" > ${RESTORE_TXT}
-  echo "# sudo -u ${DB_USER} psql -d postgres" > ${RESTORE_TXT}
+  echo "# sudo -u ${_MASTODON_USER} psql -U ${DB_USER} -d postgres" > ${RESTORE_TXT}
 else
   echo "# psql -h ${DB_HOST} -d postgres -U ${DB_USER} -W" > ${RESTORE_TXT}
   echo "Password for user ${DB_USER}: <enter password (check .env.production)>" >> ${RESTORE_TXT}
@@ -69,7 +69,7 @@ echo "postgres=> create database ${DB_NAME};" >> ${RESTORE_TXT}
 echo "postgres=> \q" >> ${RESTORE_TXT}
 
 if [[ "${DB_HOST}" =~ ^/ ]]; then
-  echo "# sudo -u ${DB_USER} pg_restore -Fc -h ${DB_HOST} -d ${DB_NAME} ${DUMP_FILE}" >> ${RESTORE_TXT}
+  echo "# sudo -u ${_MASTODON_USER} pg_restore -Fc -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} ${DUMP_FILE}" >> ${RESTORE_TXT}
   echo "# sudo -u postgres psql -d ${DB_NAME}" >> ${RESTORE_TXT}
   echo "${DB_NAME}=# create extension pg_stat_statements;" >> ${RESTORE_TXT}
   echo "${DB_NAME}=# \q" >> ${RESTORE_TXT}
