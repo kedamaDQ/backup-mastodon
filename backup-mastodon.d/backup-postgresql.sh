@@ -34,7 +34,7 @@ export LANG=${LANG_}
 _MASTODON_USER=${MASTODON_USER:-${DB_USER}}
 if [[ "${DB_HOST}" =~ ^/ ]]; then
   cd /var/tmp # to avoid a warning "permission denied"
-  ${SUDO_CMD} -u ${MASTODON_USER} ${PG_DUMP} -Fc -U ${DB_USER} -d ${DB_NAME} --schema=public > ${DUMP_FILE}
+  ${SUDO_CMD} -u ${_MASTODON_USER} ${PG_DUMP} -Fc -U ${DB_USER} -d ${DB_NAME} --schema=public > ${DUMP_FILE}
 else
   ${PG_DUMP} -Fc -w -h ${DB_HOST} -d ${DB_NAME} -U ${DB_USER} --schema=public > ${DUMP_FILE}
 fi
