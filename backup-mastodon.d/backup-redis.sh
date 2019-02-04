@@ -25,9 +25,19 @@ if [[ ! -d "${BACKUP_DEST_DIR}" ]] || [[ ! -w "${BACKUP_DEST_DIR}" ]]; then
   exit 1
 fi
 
-LAST_TS=$(${REDIS_CLI} lastsave)
+_REDIS_HOST=${REDIS_HOST:-'127.0.0.1'}
+_REDIS_PORT=${REDIS_PORT:-'6379'}
 
-${REDIS_CLI} bgsave
+REDIS_OPTS=''
+if [[ "${_REDIS_HOST}" =~ ^/ ]]; then
+  REDIS_OPTS="-s ${_REDIS_HOST}"
+else
+  REDIS_OPTS="-h ${_REDIS_HOST} -p ${_REDIS_PORT}"
+fi
+
+LAST_TS=$(${REDIS_CLI} ${REDIS_OPTS} lastsave)
+
+${REDIS_CLI} ${REDIS_OPTS} bgsave
 if [[ $? != 0 ]]; then
   echo 'failed to dump redis database.'
   ${LOGGER_CMD} -p user.err 'failed to dump redis database.'
@@ -35,12 +45,12 @@ if [[ $? != 0 ]]; then
 fi
 
 
-while [[ "${LAST_TS}" = $(${REDIS_CLI} lastsave) ]] && [[ ${RETRY} -ne 0 ]]; do
+while [[ "${LAST_TS}" = $(${REDIS_CLI} ${REDIS_OPTS} lastsave) ]] && [[ ${RETRY} -ne 0 ]]; do
   sleep 10
   let RETRY=RETRY-1
 done
 
-if [[ "${LAST_TS}" = $(${REDIS_CLI} lastsave) ]]; then
+if [[ "${LAST_TS}" = $(${REDIS_CLI} ${REDIS_OPTS} lastsave) ]]; then
   echo 'failed to backup redis data: timeout'
   ${LOGGER_CMD} -p user.err 'failed to backup redis data: timeout'
   exit 3
@@ -48,7 +58,7 @@ fi
 
 LANG_=${LANG}
 export LANG=en_US.utf8
-DUMP_FILE="${BACKUP_DEST_DIR}/dump.rdb.$(date --date "@$(${REDIS_CLI} lastsave)" +%Y-%m-%d-%H.%M.%S)"
+DUMP_FILE="${BACKUP_DEST_DIR}/dump.rdb.$(date --date "@$(${REDIS_CLI} ${REDIS_OPTS} lastsave)" +%Y-%m-%d-%H.%M.%S)"
 export LANG=${LANG_}
 
 ${CP_CMD} -p ${REDIS_DATA}/dump.rdb ${DUMP_FILE}
