@@ -27,12 +27,17 @@ fi
 
 _REDIS_HOST=${REDIS_HOST:-'127.0.0.1'}
 _REDIS_PORT=${REDIS_PORT:-'6379'}
+_REDIS_PASS=${REDIS_PASS:-''}
 
 REDIS_OPTS=''
 if [[ "${_REDIS_HOST}" =~ ^/ ]]; then
   REDIS_OPTS="-s ${_REDIS_HOST}"
 else
   REDIS_OPTS="-h ${_REDIS_HOST} -p ${_REDIS_PORT}"
+fi
+
+if [ "${_REDIS_PASS}" ]; then
+  REDIS_OPTS+=" -a ${_REDIS_PASS}"
 fi
 
 LAST_TS=$(${REDIS_CLI} ${REDIS_OPTS} lastsave)
